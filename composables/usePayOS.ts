@@ -1,7 +1,7 @@
 import CryptoJS from 'crypto-js'
 
 export type PayOSRes<TData> = {
-    code: string
+    code: '00' | string
     desc: string
     data: TData
     signature: string
@@ -46,7 +46,7 @@ export type WebhookReq = {
     reference: string
     transactionDateTime: string
     paymentLinkId: string
-    code: string
+    code: '00' | string
     desc: string
     counterAccountBankId: string
     counterAccountBankName: string
@@ -56,14 +56,22 @@ export type WebhookReq = {
     virtualAccountNumber: string
 }
 
+export type CallbackParams = {
+    code: '00' | string
+    id: string
+    cancel: boolean
+    status: 'PAID' | 'PENDING' | 'PROCESSING' | 'CANCELLED'
+    orderCode: number
+}
+
 export default () => {
-    const { baseUrl, clientId, apiKey, checksumKey } = useRuntimeConfig().payos
+    const { baseUrl, clientId, apiKey, checksumKey } = useRuntimeConfig().public.payos
     const authHeaders = {
         'x-client-id': clientId,
         'x-api-key': apiKey,
     }
     function sign(data: any) {
-        const stringifyData = Object.keys(data).sort().map(key => `${key}=${data[key]}`).join('&')
+        const stringifyData = Object.keys(data).filter(key => key !== 'signature').sort().map(key => `${key}=${data[key]}`).join('&')
         return CryptoJS.HmacSHA256(stringifyData, checksumKey).toString(CryptoJS.enc.Hex)
     }
     function verify(data: any, incomingSignature: string) {
