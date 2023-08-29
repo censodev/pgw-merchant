@@ -38,6 +38,24 @@ export type PaymentCreateReq = {
     signature?: string
 }
 
+export type WebhookReq = {
+    orderCode: number
+    amount: number
+    description: string
+    accountNumber: string
+    reference: string
+    transactionDateTime: string
+    paymentLinkId: string
+    code: string
+    desc: string
+    counterAccountBankId: string
+    counterAccountBankName: string
+    counterAccountName: string
+    counterAccountNumber: string
+    virtualAccountName: string
+    virtualAccountNumber: string
+}
+
 export default () => {
     const { baseUrl, clientId, apiKey, checksumKey } = useRuntimeConfig().payos
     const authHeaders = {
