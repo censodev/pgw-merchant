@@ -10,19 +10,19 @@
             <UFormGroup size="xl" label="Description">
                 <UInput v-model="reqBody.description" />
             </UFormGroup>
+            <UFormGroup size="xl" label="Request Body">
+                <UTextarea :rows="10" :value="prettyReqBody" disabled />
+            </UFormGroup>
             <UButton size="xl" @click="submit" color="blue">Submit</UButton>
             <UButton v-if="resBody?.data?.checkoutUrl" size="xl" :to="resBody.data.checkoutUrl" target="_blank">Checkout
             </UButton>
         </div>
         <div class="flex flex-col gap-3 grow shrink">
-            <UFormGroup size="xl" label="Request Body">
-                <UTextarea :rows="8" :value="prettyReqBody" />
-            </UFormGroup>
             <UFormGroup size="xl" label="Response Error">
-                <UTextarea :rows="1" :value="resError" />
+                <UTextarea :rows="1" :value="resError" disabled />
             </UFormGroup>
             <UFormGroup size="xl" label="Response Body">
-                <UTextarea :rows="20" :value="prettyResBody" />
+                <UTextarea :rows="22" :value="prettyResBody" disabled />
             </UFormGroup>
         </div>
     </div>

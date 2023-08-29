@@ -1,7 +1,7 @@
 <template>
     <div class="p-5">
         <UFormGroup size="xl" label="Callback">
-            <UTextarea :rows="7" :value="prettyData" />
+            <UTextarea :rows="7" :value="prettyData" disabled />
         </UFormGroup>
     </div>
 </template>
