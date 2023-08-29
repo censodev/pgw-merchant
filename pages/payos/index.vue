@@ -18,6 +18,9 @@
             <UFormGroup size="xl" label="Request Body">
                 <UTextarea :rows="8" :value="prettyReqBody" />
             </UFormGroup>
+            <UFormGroup size="xl" label="Response Error">
+                <UTextarea :rows="1" :value="resError" />
+            </UFormGroup>
             <UFormGroup size="xl" label="Response Body">
                 <UTextarea :rows="20" :value="prettyResBody" />
             </UFormGroup>
@@ -35,6 +38,7 @@ const reqBody = reactive({
     returnUrl: `${url.origin}/payos/callback`,
 })
 const resBody = ref()
+const resError = ref()
 
 const prettyReqBody = computed(() => JSON.stringify(reqBody, undefined, 4))
 const prettyResBody = computed(() => {
@@ -47,7 +51,8 @@ watch(reqBody, val => {
 })
 
 async function submit() {
-    const { data } = await usePayOS().createPayment(reqBody)
+    const { data, error } = await usePayOS().createPayment(reqBody)
     resBody.value = data.value
+    resError.value = error.value
 }
 </script>
