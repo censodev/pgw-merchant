@@ -2,7 +2,10 @@
     <div class="p-5 flex gap-5">
         <div class="flex flex-col gap-3 grow shrink">
             <UFormGroup size="xl" label="Order Code">
-                <UInput type="number" v-model="reqBody.orderCode" />
+                <div class="flex gap-2">
+                    <UInput :ui="{ wrapper: 'relative w-full' }" size="xl" type="number" v-model="reqBody.orderCode" />
+                    <UButton size="xl" icon="i-heroicons-arrow-path" @click="reqBody.orderCode = genOrderCode()"></UButton>
+                </div>
             </UFormGroup>
             <UFormGroup size="xl" label="Amount">
                 <UInput type="number" v-model="reqBody.amount" />
@@ -13,8 +16,9 @@
             <UFormGroup size="xl" label="Request Body">
                 <UTextarea :rows="10" :value="prettyReqBody" disabled />
             </UFormGroup>
-            <UButton size="xl" @click="submit" color="blue">Submit</UButton>
-            <UButton v-if="resBody?.data?.checkoutUrl" size="xl" :to="resBody.data.checkoutUrl" target="_blank">Checkout
+            <UButton size="xl" @click="submit">Submit</UButton>
+            <UButton v-if="resBody?.data?.checkoutUrl" color="blue" size="xl" :to="resBody.data.checkoutUrl"
+                target="_blank">Checkout
             </UButton>
         </div>
         <div class="flex flex-col gap-3 grow shrink">
@@ -31,7 +35,7 @@
 <script setup lang="ts">
 const url = useRequestURL()
 const reqBody = reactive({
-    orderCode: 1,
+    orderCode: genOrderCode(),
     amount: 1_000,
     description: 'test',
     cancelUrl: `${url.origin}/payos/callback`,
@@ -41,14 +45,16 @@ const resBody = ref()
 const resError = ref()
 
 const prettyReqBody = computed(() => JSON.stringify(reqBody, undefined, 4))
-const prettyResBody = computed(() => {
-    return JSON.stringify(resBody.value, undefined, 4)
-})
+const prettyResBody = computed(() => JSON.stringify(resBody.value, undefined, 4))
 
 watch(reqBody, val => {
     reqBody.orderCode = +val.orderCode
     reqBody.amount = +val.amount
 })
+
+function genOrderCode() {
+    return Math.round(new Date().getTime() / 1000)
+}
 
 async function submit() {
     const { data, error } = await usePayOS().createPayment(reqBody)
