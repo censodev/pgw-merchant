@@ -3,12 +3,12 @@
         <div class="flex flex-col gap-3 grow shrink">
             <UFormGroup size="xl" label="Order Code">
                 <div class="flex gap-2">
-                    <UInput :ui="{ wrapper: 'relative w-full' }" size="xl" type="number" v-model="reqBody.orderCode" />
+                    <UInput :ui="{ wrapper: 'relative w-full' }" size="xl" type="number" v-model.number="reqBody.orderCode" />
                     <UButton size="xl" icon="i-heroicons-arrow-path" @click="reqBody.orderCode = genOrderCode()"></UButton>
                 </div>
             </UFormGroup>
             <UFormGroup size="xl" label="Amount">
-                <UInput type="number" v-model="reqBody.amount" />
+                <UInput type="number" v-model.number="reqBody.amount" />
             </UFormGroup>
             <UFormGroup size="xl" label="Description">
                 <UInput v-model="reqBody.description" />
@@ -46,11 +46,6 @@ const resError = ref()
 
 const prettyReqBody = computed(() => JSON.stringify(reqBody, undefined, 4))
 const prettyResBody = computed(() => JSON.stringify(resBody.value, undefined, 4))
-
-watch(reqBody, val => {
-    reqBody.orderCode = +val.orderCode
-    reqBody.amount = +val.amount
-})
 
 function genOrderCode() {
     return Math.round(new Date().getTime() / 1000)
